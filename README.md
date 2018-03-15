@@ -14,10 +14,23 @@ on `cats.effect.IO`
 * `circe` imports
 * Logging
 
-Obviously we have a dependency on `cats`. When 
-Scalaz 8 comes out there'll be `prelude-scalaz`
-and `prelude-cats` modules
+## Goal
 
+Obviously with something like this there's a tradeoff
+between making it feature rich (so the user doesn't
+need to write as much boilerplate of their own) 
+yet coupling it to specific dependencies and so limiting its 
+applicability and making it more abstract and thus
+more flexible/widely applicable yet requiring the user
+to write more boilerplate to enrich/tailor it to their
+specific use case
+
+I've opted for the former, because as of this writing
+cats and circe are superior to any other 
+libraries in their respective domains and sttp is simply
+a wrapper lib around whatever http backend the user
+chooses (i.e. my `http` package is thus a thin wrapper
+around a wrapper lib)
 
 ## Usage
 
@@ -149,7 +162,13 @@ val res: Either[HttpResponse[Either[JsonErr, A]], Either[AppFailure, A]] =
 
 ## Future work
 
-The code for these is actually already written
+Obviously we have a dependency on `cats`. When 
+Scalaz 8 comes out there'll be `prelude-scalaz`
+and `prelude-cats` modules
+
+In addition, there will be modules for specific 
+technologies/use cases (The code for these is 
+actually already written)
 * `prelude-mongo` - a nice functional wrapper around the 
 Casbah driver
 * `prelude-geo` - functional wrapper around `jgeohash`, a
