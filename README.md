@@ -32,6 +32,20 @@ a wrapper lib around whatever http backend the user
 chooses (i.e. my `http` package is thus a thin wrapper
 around a wrapper lib)
 
+## Future work
+
+Obviously we have a dependency on `cats`. When 
+Scalaz 8 comes out there'll be `prelude-scalaz`
+and `prelude-cats` modules
+
+In addition, there will be modules for specific 
+technologies/use cases (The code for these is 
+actually already written)
+* `prelude-mongo` - a nice functional wrapper around the 
+Casbah driver
+* `prelude-geo` - functional wrapper around `jgeohash`, a
+Java lib
+
 ## Usage
 
 ### Cache
@@ -64,6 +78,17 @@ implicit val deserializableV: DeserializableV.Aux[Array[Byte], Bar] =
 	)
 
 implicit val cacheableKVPair: CacheableKVPair.Aux[Foo, Bar] = CacheableKVPair.instance
+
+final class MemCacheClient[F[_]: Effect, KK, VV] extends EfBaseCacheClient[F, KK, VV] {
+
+	/** Not thread safe as this is just for demo purposes */
+  val cache  = scala.collection.mutable.Map.empty[KK, VV]
+
+  override protected def get(k: KK): Option[VV] = cache.get(k)
+
+  override protected def put(k: KK, v: VV): Unit = cache.put(k, v)
+
+}
  
 val cacheClient = new MemCacheClient[Id, String, Array[Byte]]
  
@@ -136,17 +161,6 @@ implicit val deserializableV: DeserializableV.Aux[Array[Byte], Post] =
 
 implicit val cacheableKVPair: CacheableKVPair.Aux[Url, Post] = CacheableKVPair.instance
 
-final class MemCacheClient[F[_]: Effect, KK, VV] extends EfBaseCacheClient[F, KK, VV] {
-
-	/** Not thread safe as this is just for demo purposes */
-  val cache  = scala.collection.mutable.Map.empty[KK, VV]
-
-  override protected def get(k: KK): Option[VV] = cache.get(k)
-
-  override protected def put(k: KK, v: VV): Unit = cache.put(k, v)
-
-}
-
 val cacheClient = new CachedJsonHttpClient[IO, String, Array[Byte]](
   new JsonHttpClient(
     new HttpClientConf {
@@ -159,17 +173,3 @@ val cacheClient = new CachedJsonHttpClient[IO, String, Array[Byte]](
 val res: Either[HttpResponse[Either[JsonErr, A]], Either[AppFailure, A]] =
   cacheClient.get[Post](uri).unsafeRunSync()
 ```
-
-## Future work
-
-Obviously we have a dependency on `cats`. When 
-Scalaz 8 comes out there'll be `prelude-scalaz`
-and `prelude-cats` modules
-
-In addition, there will be modules for specific 
-technologies/use cases (The code for these is 
-actually already written)
-* `prelude-mongo` - a nice functional wrapper around the 
-Casbah driver
-* `prelude-geo` - functional wrapper around `jgeohash`, a
-Java lib
