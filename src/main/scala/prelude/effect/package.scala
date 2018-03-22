@@ -7,6 +7,8 @@ trait EffectImports extends {}
   with cats.effect.Async.ToAsyncOps
   with cats.effect.Sync.ToSyncOps
   with cats.effect.Effect.ToEffectOps
+  with cats.effect.Concurrent.ToConcurrentOps
+  with cats.effect.ConcurrentEffect.ToConcurrentEffectOps
   with effect.IdInstances
 {
 
@@ -21,20 +23,19 @@ trait EffectImports extends {}
   type Async[F[_]] = cats.effect.Async[F]
   val Async = cats.effect.Async
 
+  type Concurrent[F[_]] = cats.effect.Concurrent[F]
+  val Concurrent = cats.effect.Concurrent
+
   type Effect[F[_]] = cats.effect.Effect[F]
   val Effect = cats.effect.Effect
 
+  type ConcurrentEffect[F[_]] = cats.effect.ConcurrentEffect[F]
+  val ConcurrentEffect = cats.effect.ConcurrentEffect
+
+  /** For handling effect errors */
   type ApplicativeError[F[_], E] = cats.ApplicativeError[F, E]
   val ApplicativeError = cats.ApplicativeError
 
   type MonadError[F[_], E] = cats.MonadError[F, E]
   val MonadError = cats.MonadError
-
-  implicit def toAsyncOps[F[_]: Effect, A](repr: F[A]): effect.AsyncOps[F, A] =
-    new effect.AsyncOps[F, A](repr)
-
-  // TODO: Compiler fails to lift `F[Unit]` via `toAsyncOps`
-  implicit def toAsyncOps1[F[_]: Effect](repr: F[Unit]): effect.AsyncOps[F, Unit] =
-    new effect.AsyncOps[F, Unit](repr)
-
 }

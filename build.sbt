@@ -21,8 +21,8 @@ lazy val commonDeps = Seq(
   "io.circe" %% "circe-generic" % circe,
   "io.circe" %% "circe-parser" % circe,
   "io.estatico" %% "newtype" % "0.3.0",
-  "org.typelevel" %% "cats-core" % "1.0.1",
-  "org.typelevel" %% "cats-effect" % "0.9",
+  "org.typelevel" %% "cats-core" % "1.1.0",
+  "org.typelevel" %% "cats-effect" % "0.10",
   "org.typelevel" %% "kittens" % "1.0.0-RC2",
   "org.typelevel" %% "mouse" % "0.16",
 

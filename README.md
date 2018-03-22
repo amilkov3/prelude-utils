@@ -7,8 +7,7 @@ _Utilities common to most services_
 * Http client
 * Cached http client
 * `cats-core` and `mouse` imports
-* `cats-effect` imports along with concurrency primitives
-on `cats.effect.IO`
+* `cats-effect` imports 
 * App error hierarchy 
 * Extension methods to existing types
 * `circe` imports

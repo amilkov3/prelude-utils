@@ -38,7 +38,7 @@ abstract class EfCachedJsonHttpClient[F[_]: Effect, KK, VV] {
 class CachedJsonHttpClient[F[_]: Effect, KK, VV](
   val client: JsonHttpClient[F],
   cache: EfBaseCacheClient[F, KK, VV]
-) extends EfCachedJsonHttpClient[F, KK, VV] with Logging {
+) extends EfCachedJsonHttpClient[F, KK, VV] with StrictLogging {
 
   /*_*/
   override def get[A : JsonDecodable](
@@ -57,11 +57,13 @@ class CachedJsonHttpClient[F[_]: Effect, KK, VV](
       {
         client.get[A](url).map{r => r.body.map { body =>
           body.foreach{ a =>
-            cache.put[Url, A](url, a).unsafeForkAsync({
+            (Async.shift[F](ec) *> cache.put[Url, A](url, a)).runAsync{
               case Left(err) =>
-                logger.error(s"Failed to put ${ev5.tpe} into cache after GET. Info: ${err.getMessage}")
-              case _ => ()
-            })
+                IO(logger.error(
+                  s"Failed to put ${ev5.tpe} into cache after GET. Info: ${err.getMessage}"
+                ))
+              case _ => IO.unit
+            }.unsafeRunSync()
           }
           body
         }

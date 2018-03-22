@@ -6,6 +6,8 @@ import org.slf4j
 package object logging extends LoggingImports
 
 trait LoggingImports {
+
+  //TODO: Really probably don't need a strict and lazy logger
   /** Extend to get a lazy `logger` val in scope */
   type LazyLogging = scalalogging.LazyLogging
 
