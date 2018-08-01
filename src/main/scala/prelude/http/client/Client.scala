@@ -81,7 +81,7 @@ class JsonHttpClient[F[_]: Effect](
       .headers(headers)
       .body(body.asJson.spaces2, StandardCharsets.UTF_8.name)
       .send[F]()
-      .map(r => r.copy(body = r.body.map(_ => ())))
+      .map(r => r.copy(rawErrorBody = r.rawErrorBody.map(_ => ())))
   }
 }
 

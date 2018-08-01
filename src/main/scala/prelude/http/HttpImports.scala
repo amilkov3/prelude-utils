@@ -1,6 +1,7 @@
 package prelude.http
 
 import com.softwaremill.sttp._
+import prelude.cache.contents.SerializableKV
 import prelude.effect._
 import prelude.category._
 
@@ -21,15 +22,16 @@ trait HttpImports extends {}
 
   type HttpResponse[A] = Response[A]
   object HttpResponse {
-    def empty200[A](a: A) = Response(a.asRight[String], 200, "OK", List.empty, List.empty)
+    def empty200[A](a: A) : Response[A] =
+      Response(a.asRight[Array[Byte]], 200, "OK", List.empty, List.empty)
   }
 }
 
 trait CacheClientImports {
 
-  type EfCachedJsonHttpClient[F[_], K, V] = cached.EfCachedJsonHttpClient[F, K, V]
+  type EfCachedJsonHttpClient[F[_], K, V] = cached.BaseCachedJsonHttpClient[F, K, V]
 
-  type CachedJsonHttpClient[F[_], K, V] = cached.CachedJsonHttpClient[F, K, V]
+  type CachedJsonHttpClient[F[_], K, V] = cached.BaseCachedJsonHttpClient[F, K, V]
 }
 
 trait HttpClientImports {

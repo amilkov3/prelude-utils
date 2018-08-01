@@ -9,7 +9,7 @@ import scodec._
 import scodec.bits.BitVector
 import scodec.codecs.implicits._
 
-class EfCacheClientUnitTest extends UnitPropertySpec {
+class CacheClientUnitTest extends UnitPropertySpec {
 
   case class Foo(x: String, y: Int)
   case class Bar(a: Double, b: Boolean)
@@ -24,8 +24,8 @@ class EfCacheClientUnitTest extends UnitPropertySpec {
 
   case object DeserializationFailure extends InternalComponent
 
-  implicit val deserializableV: DeserializableV.Aux[Array[Byte], Bar] =
-    DeserializableV.instance[Array[Byte], Bar](
+  implicit val deserializableV: DeserializableV.Aux[Bar, Array[Byte]] =
+    DeserializableV.instance[Bar, Array[Byte]](
       ba => Codec[Bar].decode(BitVector(ba))
         .toEither
         .leftMap(err => InternalFailure(err.message, DeserializationFailure))
@@ -34,12 +34,12 @@ class EfCacheClientUnitTest extends UnitPropertySpec {
 
   implicit val cacheableKVPair: CacheableKVPair.Aux[Foo, Bar] = CacheableKVPair.instance
 
-  val cacheClient = new MemCacheClient[Id, String, Array[Byte]]
+  val cacheClient = new MemCacheClient[IO, String, Array[Byte]]
 
   property("should put and get, serializing and deserializing correctly") {
     val foo = Foo("hello", 2)
-    cacheClient.put[Foo, Bar](foo, Bar(1.5d, true))
-    cacheClient.get[Foo, Bar](foo).asSome.asRight
+    cacheClient.put[Foo, Bar](foo, Bar(1.5d, true)).unsafeRunSync()
+    cacheClient.get[Foo, Bar](foo).unsafeRunSync.asSome.asRight
   }
 
 }

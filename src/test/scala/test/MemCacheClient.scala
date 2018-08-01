@@ -1,9 +1,9 @@
 package test
 
-import prelude.cache.contents.EfBaseCacheClient
+import prelude.cache.contents.BaseCacheClient
 import prelude.effect._
 
-final class MemCacheClient[F[_]: Effect, KK, VV] extends EfBaseCacheClient[F, KK, VV] {
+final class MemCacheClient[F[_]: Effect, KK, VV] extends BaseCacheClient[F, KK, VV] {
 
   val cache  = scala.collection.mutable.Map.empty[KK, VV]
 

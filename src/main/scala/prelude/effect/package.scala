@@ -3,13 +3,8 @@ package prelude
 package object effect extends EffectImports
 
 trait EffectImports extends {}
-  with cats.effect.LiftIO.ToLiftIOOps
-  with cats.effect.Async.ToAsyncOps
-  with cats.effect.Sync.ToSyncOps
-  with cats.effect.Effect.ToEffectOps
-  with cats.effect.Concurrent.ToConcurrentOps
-  with cats.effect.ConcurrentEffect.ToConcurrentEffectOps
-  with effect.IdInstances
+  with cats.effect.syntax.AllCatsEffectSyntax
+  //with effect.IdInstances
 {
 
   /** Types */

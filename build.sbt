@@ -10,8 +10,8 @@ lazy val root = project.in(file("."))
   .configs(IntegrationTest.extend(Test))
   .settings(Defaults.itSettings)
 
-lazy val sttp = "1.1.8"
-lazy val circe = "0.9.1"
+lazy val sttp = "1.2.1"
+lazy val circe = "0.9.3"
 
 lazy val commonDeps = Seq(
   "com.softwaremill.sttp" %% "core" % sttp,
@@ -20,11 +20,11 @@ lazy val commonDeps = Seq(
   "io.circe" %% "circe-core" % circe,
   "io.circe" %% "circe-generic" % circe,
   "io.circe" %% "circe-parser" % circe,
-  "io.estatico" %% "newtype" % "0.3.0",
+  "io.estatico" %% "newtype" % "0.4.2",
   "org.typelevel" %% "cats-core" % "1.1.0",
-  "org.typelevel" %% "cats-effect" % "0.10",
-  "org.typelevel" %% "kittens" % "1.0.0-RC2",
-  "org.typelevel" %% "mouse" % "0.16",
+  "org.typelevel" %% "cats-effect" % "1.0.0-RC2",
+  "org.typelevel" %% "kittens" % "1.1.0",
+  "org.typelevel" %% "mouse" % "0.17",
 
   "org.scalacheck" %% "scalacheck" % "1.13.4" % "test, it",
   "org.scalatest" %% "scalatest" % "3.0.5" % "test, it",

@@ -30,6 +30,7 @@ object url {
 
   @newtype case class Host(repr: String)
   object Host {
+
     /** https://www.regextester.com/23 */
     private val hostR =
       """^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$""".r

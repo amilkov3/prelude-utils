@@ -7,7 +7,7 @@ import io.circe.generic.JsonCodec
 import prelude.cache._
 import prelude.category._
 import prelude.error._
-import prelude.http.client.{HttpClientConf, JsonHttpClient}
+import prelude.http._
 import scodec._
 import scodec.bits.BitVector
 import scodec.codecs.implicits._
@@ -38,8 +38,8 @@ class CachedJsonHttpClientIT extends ITPropertySpec {
 
   case object DeserializationFailure extends InternalComponent
 
-  implicit val deserializableV: DeserializableV.Aux[Array[Byte], Post] =
-    DeserializableV.instance[Array[Byte], Post](
+  implicit val deserializableV: DeserializableV.Aux[Post, Array[Byte]] =
+    DeserializableV.instance[Post, Array[Byte]](
       ba => Codec[Post].decode(BitVector(ba))
         .toEither
         .leftMap(err => InternalFailure(err.message, DeserializationFailure))
@@ -50,7 +50,7 @@ class CachedJsonHttpClientIT extends ITPropertySpec {
 
   val cache = new MemCacheClient[IO, String, Array[Byte]]
 
-  val client = new CachedJsonHttpClient[IO, String, Array[Byte]](
+  val client = new BaseCachedJsonHttpClient[IO, String, Array[Byte]](
     new JsonHttpClient(
       new HttpClientConf {
         override val readTimeout: FiniteDuration = 2.seconds
